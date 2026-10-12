@@ -1,5 +1,7 @@
 # MSN Appointment Scheduler
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23326641.svg)](https://doi.org/10.5281/zenodo.23326641)
+
 ## Download the Application
 
 ### Windows Desktop Application (Recommended)
@@ -25,7 +27,7 @@
 
 The scheduler uses Monte Carlo simulation to construct appointment times under a user-selected quality-of-service target. Parameters include service-time distributions (normal, uniform, empirical), multiple servers, no-show probability, and acceptable waiting time.
 
-> **Release status: preview / validation required.** The Python port has basic automated tests, but a systematic cross-check against VBA outputs has **not** been completed. Do not rely on its schedules for real clinical operations without independent validation.
+> **Release status:** Stable release (v1.0.1). The Python implementation has been compared with the original Excel/VBA version and is available as a standalone Windows application.
 
 ## Research foundation and citation
 
