@@ -1,0 +1,502 @@
+Attribute VB_Name = "formAppointmentClaculation"
+Attribute VB_Base = "0{E34478B6-31B8-4C9D-A509-4D910CB4CAF3}{C1D9EFA5-6391-4AB1-A161-78684165D595}"
+Attribute VB_GlobalNameSpace = False
+Attribute VB_Creatable = False
+Attribute VB_PredeclaredId = True
+Attribute VB_Exposed = False
+Attribute VB_TemplateDerived = False
+Attribute VB_Customizable = False
+
+Sub GetFile()
+Dim fNameAndPath As Variant ', wb As Workbook
+'Dim dataArray() As String
+Dim i As Integer
+
+fNameAndPath = Application.GetOpenFilename(FileFilter:="Text File (*.txt), *.txt", Title:="Select File To Be Opened")
+If fNameAndPath = False Then Exit Sub
+'Set wb = Workbooks.Open(fNameAndPath)
+''
+''do stuff
+''
+'wb.Close savechanges:=True 'or false
+
+
+'Const strFileName As String = fNameAndPath
+Open fNameAndPath For Input As #1
+
+ ' -------- read from txt file to dataArrayay -------- '
+
+ i = 0
+ Do Until EOF(1)
+    ReDim Preserve dataArray_S(i)
+    Line Input #1, dataArray_S(i)
+    If dataArray_S(i) <> "" Then
+        ReDim Preserve dataArray(i)
+        dataArray(i) = (dataArray_S(i)) + 1 - 1
+    End If
+    i = i + 1
+ Loop
+ Close #1
+
+Debug.Print UBound(dataArray_S())
+
+sFileName = Mid(Mid(fNameAndPath, InStrRev(fNameAndPath, "/") + 1), InStrRev(fNameAndPath, "\") + 1) 'fNameAndPath
+
+End Sub
+
+'Private Sub CommandButton1_Click()
+Private Sub bCalculate_Click()
+    'MsgBox "Number of data is " & TextBox1.Value
+    
+    If vDistribution > 2 Then vDistribution = 1
+    
+'    If vDistribution = 0 Then
+'        For i = 0 To UBound(dataArray)
+'            dataArray(i) = (dataArray(i) - t_MU.Value) / t_SD.Value
+'        Next i
+'    End If
+'
+'    If vDistribution = 1 Then
+'        For i = 0 To UBound(dataArray)
+'            If dataArray(i) < t_MU.Value Then dataArray(i) = t_MU.Value
+'            If dataArray(i) > t_SD.Value Then dataArray(i) = t_SD.Value
+'            dataArray(i) = (dataArray(i) - t_MU.Value) / (t_SD.Value - t_MU.Value)
+'        Next i
+'    End If
+'
+'    If vDistribution = 2 Then
+'        For i = 0 To UBound(dataArray)
+'            dataArray(i) = 1 - Exp(-dataArray(i) / t_MU.Value)
+'        Next i
+'    End If
+'
+
+    dMu = t_MU.Value
+    dSD = t_SD.Value
+    dStartOfDay = tStartOfDay.Value
+    dQoS = tQOS.Value
+    dWaitingTime = tWaitingTime.Value + 1 - 1
+    dNoShow = tNoShow.Value + 1 - 1
+    
+    iNumberOfAppointment = tNumberOfAppointments.Value * tNumberOfScanners.Value
+    
+    iNumberOfServers = tNumberOfScanners.Value
+        
+    Unload formAppointmentClaculation
+    
+    
+    
+End Sub
+
+
+
+
+
+Private Sub ComboBox1_Change()
+
+End Sub
+
+Private Sub ComboBoxDistribution_Change()
+    bCalculate.Visible = True
+   ' ComboBoxDistribution.ListIndex = 0
+    vDistribution = ComboBoxDistribution.ListIndex
+    
+       
+    ComboBoxDistribution.Visible = True
+    
+    l_chooseDist.Visible = True
+    
+    If ComboBoxDistribution.ListIndex = 0 Then
+        
+        L_Mu.Visible = True
+        'L_Mu.Font = "Symbol"
+        L_Mu.Caption = ChrW(956) & " [min]:" '"m:"
+        t_MU.Value = d_mu
+        t_MU.Visible = True
+        t_SD.Visible = True
+        
+        L_SD.Visible = True
+        'L_SD.Font = "Symbol"
+        L_SD.Caption = ChrW(963) & " [min]:"
+        t_SD.Value = d_sd
+        t_SD.Visible = True
+                
+        'If t_SD.Value = "" Then
+        '    If text_sd.Visible = True Then
+        '        t_SD.Value = fStdDev(dataArray_S)
+        '    Else: t_SD.Value = 10
+        '    End If
+        'End If
+        
+        
+        sDistribution = "Normal Distribution"
+            
+    End If
+    
+    If ComboBoxDistribution.ListIndex = 1 Then
+        
+        t_MU.Value = d_a
+        t_SD.Value = d_b
+        
+        L_Mu.Visible = True
+        L_Mu.Font = "Tahoma"
+        L_Mu.Caption = "Lower Bound (a) [min]:"
+        t_MU.Visible = True
+        'If text_mu.Visible = True Then t_MU.Value = fMean(dataArray_S) - Sqr(3) * fStdDev(dataArray_S)
+        L_SD.Visible = True
+        L_SD.Font = "Tahoma"
+        L_SD.Caption = "Upper Bound (b) [min]:"
+        t_SD.Visible = True
+        'If text_sd.Visible = True Then t_SD.Value = fMean(dataArray_S) + Sqr(3) * fStdDev(dataArray_S)
+            
+        sDistribution = "Uniform Distribution"
+        
+    End If
+    
+    If ComboBoxDistribution.ListIndex = 2 Then
+        
+        If cGetFile.Visible = False Then
+            cGetFile.Visible = True
+            
+            GetFile
+            
+            label_mu.Visible = True
+            text_mu.Visible = True
+            text_mu.Caption = Math.Round(fMean(dataArray_S), 6)
+            label_sd.Visible = True
+            text_sd.Visible = True
+            text_sd.Caption = Math.Round(fStdDev(dataArray_S), 6)
+        End If
+                
+        L_Mu.Visible = False
+'        L_Mu.Font = "Symbol"
+'        L_Mu.Caption = "l:"
+        t_MU.Visible = False
+'        t_MU.Value = fMean(dataArray_S)
+        L_SD.Visible = False
+'        L_SD.Font = "Symbol"
+'        L_SD.Caption = "s:"
+        t_SD.Visible = False
+'        t_SD.Value = fMean(dataArray_S)
+               
+        sDistribution = "Empirical Distribution"
+        
+        fBubbleSort
+           
+    End If
+    
+    tNumberOfAppointments.Visible = True
+    lNumberOfAppointments.Visible = True
+    lStartOfDay.Visible = True
+    tStartOfDay.Visible = True
+    lQoS.Visible = True
+    tQOS.Visible = True
+    bCalculate.Visible = True
+    
+    
+End Sub
+
+Private Sub cGetFile_Click()
+    
+    GetFile
+    
+    label_mu.Visible = True
+    text_mu.Visible = True
+    text_mu.Caption = Math.Round(fMean(dataArray_S), 6)
+    label_sd.Visible = True
+    text_sd.Visible = True
+    text_sd.Caption = Math.Round(fStdDev(dataArray_S), 6)
+     
+    
+    
+    'bCalculate.Visible = True
+       
+End Sub
+
+Function GetFilenameFromPath(ByVal strPath As String) As String
+    
+    If Right$(strPath, 1) <> "\" And Len(strPath) > 0 Then
+        GetFilenameFromPath = GetFilenameFromPath(Left$(strPath, Len(strPath) - 1)) + Right$(strPath, 1)
+    End If
+    
+End Function
+Function isOpen(ByVal strPath As String)
+
+    Dim wBook As Workbook
+    On Error Resume Next
+    Set wBook = Workbooks(strPath)
+    If wBook Is Nothing Then 'Not open
+       Application.Workbooks.Open (strPath)
+    End If
+End Function
+Sub FileBrowser()
+    Dim strPath As String
+    Dim wb As Workbook
+    strPath = Application.GetOpenFilename(, , "Select your File")
+    If strPath = "" Then Exit Sub
+    isOpen (GetFilenameFromPath(strPath))
+    Set wb = Application.Workbooks(GetFilenameFromPath(strPath))
+End Sub
+
+
+Private Sub TextBox1_Change()
+    OnlyNumbers
+    If IsNumeric(TextBox1.Value) Then TextBox1.Value = Int(TextBox1.Value)
+End Sub
+
+Private Sub OnlyNumbers()
+
+
+
+    If TypeName(Me.ActiveControl) = "TextBox" Then
+
+        With Me.ActiveControl
+
+            If Not IsNumeric(.Value) And .Value <> vbNullString Then
+
+                MsgBox "Sorry, only numbers allowed"
+
+                .Value = 1 'vbNullString
+
+            End If
+
+        End With
+
+    End If
+    
+
+End Sub
+
+
+Private Sub cHelp_Click()
+MsgBox "Welcome to MSN (Appointment App) tool:" & vbNewLine _
+& "The tool takes the system data and service level and calculate the appropriate appointment times  " _
+& "(see paper Shnits, Bendavid, and Marmor (2019) for more info)." & vbNewLine & vbNewLine _
+& "First, choose process distribution and parameters (include setup times) " & vbNewLine _
+& "If an empirical distribution is chosen then you will have to choose a text file with the service duration in minutes (later you can change it by pushing the ''Get File'' button). " & vbNewLine _
+& "Continue with choosing the systems parameters." & vbNewLine _
+& "Last, Push the ''calculate'' button for generating the appointments." & vbNewLine _
+& "Acceleration can be ussed at the expense of accuracy."
+
+End Sub
+
+
+
+
+Private Sub ComboBoxSimulationRun_Change()
+
+    If ComboBoxSimulationRun.ListIndex = 0 Then vInstances = 50000 / 25
+    If ComboBoxSimulationRun.ListIndex = 1 Then vInstances = 50000 / 5
+    If ComboBoxSimulationRun.ListIndex = 2 Then vInstances = 50000
+       
+End Sub
+
+
+
+Private Sub Label2_Click()
+
+End Sub
+
+
+
+
+
+Private Sub t_MU_Change()
+    OnlyNumbers
+    If t_MU.Value < 0 Then t_MU.Value = 30
+    
+    If ComboBoxDistribution.ListIndex = 0 Then
+        d_mu = t_MU.Value
+        't_SD.Value = d_sd
+    End If
+    
+    If ComboBoxDistribution.ListIndex = 1 Then
+        d_a = t_MU.Value
+        't_SD.Value = d_sd
+    End If
+    
+    
+End Sub
+
+Private Sub t_SD_Change()
+    OnlyNumbers
+    If t_SD.Value < 0 Then t_SD.Value = 1
+    
+    If ComboBoxDistribution.ListIndex = 0 Then
+        d_sd = t_SD.Value
+        't_SD.Value = d_sd
+    End If
+    
+    If ComboBoxDistribution.ListIndex = 1 Then
+        If t_SD.Value <= t_MU.Value Then
+            MsgBox "Uppler limit cannot be smaller than lower limit"
+            t_SD.Value = 2 * t_MU.Value
+        End If
+        
+        d_b = t_SD.Value
+        't_SD.Value = d_sd
+    End If
+    
+End Sub
+
+'************************************************************************
+'*                                              Standard Deviation                                    *
+'************************************************************************
+Function fMean(arr() As String)
+     Dim Sum As Double
+     Dim i, k As Integer
+
+     Sum = 0
+
+     For i = 0 To UBound(arr())
+         If arr(i) <> "" Then
+            Sum = Sum + arr(i)
+            k = k + 1
+        End If
+     Next i
+ 
+     fMean = Sum / k
+
+End Function
+
+'************************************************************************
+'*                                              Standard Deviation                                    *
+'************************************************************************
+Function fStdDev(arr() As String)
+     Dim i, k As Integer
+     Dim avg As Double, SumSq As Double
+ 
+     avg = fMean(arr)
+     For i = 0 To UBound(arr())
+          If arr(i) <> "" Then
+            SumSq = SumSq + (arr(i) - avg) ^ 2
+            k = k + 1
+          End If
+     Next i
+ 
+     fStdDev = Sqr(SumSq / (k - 1))
+
+End Function
+
+
+
+Private Sub tNoShow_Change()
+
+    OnlyNumbers
+    If tNoShow.Value < 0 Then
+        MsgBox "Cannot be bellow 0"
+        tNoShow.Value = 0.1
+    End If
+    
+    If tNoShow.Value >= 1 Then
+        MsgBox "Cannot be Above 100%"
+        tNoShow.Value = 0.1
+    End If
+
+End Sub
+
+Private Sub tNumberOfAppointments_Change()
+
+    OnlyNumbers
+    If tNumberOfAppointments.Value < 1 Then tNumberOfAppointments.Value = 10
+    
+    If tNumberOfAppointments.Value <> Application.WorksheetFunction.Round(tNumberOfAppointments.Value, 0) Then
+        MsgBox "The number of appointments should be an Integer"
+        tNumberOfAppointments.Value = Application.WorksheetFunction.Round(tNumberOfAppointments.Value, 0)
+    End If
+    iNumberOfAppointment = tNumberOfAppointments.Value
+    
+End Sub
+
+Private Sub tNumberOfScanners_Change()
+    OnlyNumbers
+    If tNumberOfScanners.Value < 1 Then
+        MsgBox "The number of scanners should be more than 0"
+        tNumberOfScanners.Value = 1
+    End If
+    
+    If tNumberOfScanners.Value <> Application.WorksheetFunction.Round(tNumberOfScanners.Value, 0) Then
+        MsgBox "The number of scanners should be Integer"
+        tNumberOfScanners.Value = Application.WorksheetFunction.Round(tNumberOfScanners.Value, 0)
+    End If
+    
+    
+'    If tQOS.Value >= 1 Then
+'        MsgBox "Cannot be Above 100%"
+'        tQOS.Value = 0.8
+'    End If
+End Sub
+
+Private Sub tQOS_Change()
+    
+    OnlyNumbers
+    If tQOS.Value < 0 Then
+        MsgBox "Cannot be bellow 0"
+        tQOS.Value = 0.8
+    End If
+    
+    If tQOS.Value >= 1 Then
+        MsgBox "Cannot be Above 100%"
+        tQOS.Value = 0.8
+    End If
+    
+End Sub
+
+Private Sub tStartOfDay_Change()
+    
+    OnlyNumbers
+    
+    If tStartOfDay.Value < 0 Then tStartOfDay.Value = 7
+    If tStartOfDay.Value > 24 Then tStartOfDay.Value = 7
+    
+    
+End Sub
+
+
+
+Private Sub tWaitingTime_Change()
+    
+    OnlyNumbers
+    If tWaitingTime.Value < 0 Then
+        MsgBox "Cannot be bellow 0"
+        tWaitingTime.Value = 0
+    End If
+    
+    'If tWaitingTime.Value >= 1 Then
+    '    MsgBox "Cannot be Above 100%"
+    '    tWaitingTime.Value = 0.8
+    'End If
+    
+
+End Sub
+
+Private Sub UserForm_Initialize()
+    
+    ComboBoxDistribution.Clear
+    ComboBoxSimulationRun.Clear
+    
+    vInstances = 50000 / 4 'initialization
+    
+    d_mu = 30#
+    d_sd = 6#
+    d_a = 10#
+    d_b = 20#
+
+    With ComboBoxDistribution
+        .AddItem "Normal"
+        .AddItem "Uniform"
+   '     .AddItem "Exponenetial"
+   '     .AddItem "Triangular"
+        .AddItem "Empirical"
+    End With
+    
+    With ComboBoxSimulationRun
+        .AddItem "Fast for exploration"
+        .AddItem "Medium - for building trust"
+        .AddItem "Extensive  - for final result"
+    End With
+
+    ComboBoxSimulationRun.ListIndex = 0
+    ComboBoxDistribution.ListIndex = 0
+
+End Sub

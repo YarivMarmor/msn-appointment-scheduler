@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "msn-appointment-scheduler"
+version = "0.1.0"
+description = "Standalone Python port of the MSN appointment scheduling simulation originally implemented in Excel/VBA."
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+  "numpy>=1.26,<2",
+  "scipy>=1.11",
+  "matplotlib>=3.8",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "pyinstaller>=6"]
+
+[project.scripts]
+msn-scheduler = "appointment_scheduler.gui:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
