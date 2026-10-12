@@ -1,6 +1,6 @@
 # MSN Appointment Scheduler
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23326641.svg)](https://doi.org/10.5281/zenodo.23326641)
+[![DOI](https://zenodo.org/badge/1415397664.svg)](https://doi.org/10.5281/zenodo.23326640)
 
 ## Download the Application
 
