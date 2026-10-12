@@ -23,13 +23,6 @@
 
 ---
 
-Appointment scheduling tool with **two editions**:
-
-| Edition | Download / Run | Requirements |
-|---|---|---|
-| **Python desktop application** | Windows executable (when published under Releases), or run from source | EXE: Windows; source: Python 3.11+ |
-| **Original Excel/VBA workbook** | [`legacy/Appointment_Scheduler_MSN_Tool.xlsm`](legacy/Appointment_Scheduler_MSN_Tool.xlsm) | Desktop Microsoft Excel on Windows with macros permitted |
-
 The scheduler uses Monte Carlo simulation to construct appointment times under a user-selected quality-of-service target. Parameters include service-time distributions (normal, uniform, empirical), multiple servers, no-show probability, and acceptable waiting time.
 
 > **Release status: preview / validation required.** The Python port has basic automated tests, but a systematic cross-check against VBA outputs has **not** been completed. Do not rely on its schedules for real clinical operations without independent validation.
