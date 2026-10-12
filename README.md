@@ -1,5 +1,28 @@
 # MSN Appointment Scheduler
 
+## Download the Application
+
+### Windows Desktop Application (Recommended)
+
+**[Download MSN Appointment Scheduler for Windows (EXE)](https://github.com/YarivMarmor/msn-appointment-scheduler/releases/latest/download/MSN_Appointment_Scheduler.exe)**
+
+- Standalone Windows application
+- No Python or Excel installation required
+- Graphical user interface
+- File size: approximately 73 MB
+
+### Original Excel/VBA Version
+
+**[Download Excel/VBA Workbook](https://github.com/YarivMarmor/msn-appointment-scheduler/releases/latest)**
+
+- Original implementation of the MSN algorithm
+- Requires Microsoft Excel for Windows
+- Macros must be enabled for the workbook to function
+
+[Instructions for enabling Excel macros](docs/EXCEL_MACROS.md)
+
+---
+
 Appointment scheduling tool with **two editions**:
 
 | Edition | Download / Run | Requirements |
