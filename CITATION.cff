@@ -1,0 +1,9 @@
+cff-version: 1.2.0
+message: "If you use the MSN Appointment Scheduler software, please cite this repository and the associated Omega (2020) article described in the README."
+type: software
+title: "MSN Appointment Scheduler"
+authors:
+  - family-names: Marmor
+    given-names: Yariv N.
+repository-code: "https://github.com/YarivMarmor/msn-appointment-scheduler"
+url: "https://github.com/YarivMarmor/msn-appointment-scheduler"
